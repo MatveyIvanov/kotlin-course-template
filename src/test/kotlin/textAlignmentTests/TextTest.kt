@@ -1,5 +1,6 @@
 package textAlignmentTests
 
+import javax.management.InvalidAttributeValueException
 import textAlignment.Text
 import org.junit.Assert
 import org.junit.Test
@@ -15,7 +16,7 @@ class TextTest {
         val text = Text(TEXT1)
         Assert.assertEquals(
             "Sometimes you still make small grammar mistakes, and I think you can improve your vocabulary. I recommend you review \n" +
-                    "many of the language points we studied this term.", text.align()
+                    "many of the language points we studied this term.", text.alignLeft()
         )
     }
 
@@ -25,7 +26,7 @@ class TextTest {
         Assert.assertEquals("Sometimes you still make small grammar mistakes, and I \n" +
                 "think you can improve your vocabulary. I recommend you \n" +
                 "review many of the language points we studied this \n" +
-                "term.", text.align())
+                "term.", text.alignLeft())
     }
 
     @Test
@@ -38,15 +39,14 @@ class TextTest {
         Assert.assertEquals("Sometimes you still make small grammar \n" +
                 "mistakes, and I think you can improve your \n" +
                 "vocabulary. I recommend you review many of the \n" +
-                "language points we studied this term.", text.align())
-        text.width = 48
+                "language points we studied this term.", text.alignLeft())
         /* There is enough space for 'mistakes' + comma,
            so it stays at "current" line
          */
         Assert.assertEquals("Sometimes you still make small grammar mistakes,\n" +
                 "and I think you can improve your vocabulary. I \n" +
                 "recommend you review many of the language points\n" +
-                "we studied this term.", text.align())
+                "we studied this term.", text.alignLeft(48))
     }
 
     @Test
@@ -56,7 +56,7 @@ class TextTest {
 
         Assert.assertEquals("Sometimes you still make small grammar mistakes, and I \n" +
                 "think you can improve your vocabulary. I recommend you \n" +
-                "review many of the language points we studied this term", text.align())
+                "review many of the language points we studied this term", text.alignLeft())
     }
 
     @Test
@@ -67,7 +67,7 @@ class TextTest {
                     "ипед - это\n" +
                     "геометриче\n" +
                     "ская \n" +
-                    "фигура", text.align()
+                    "фигура", text.alignLeft()
         )
     }
 
@@ -83,7 +83,25 @@ class TextTest {
                     "триче\n" +
                     "ская \n" +
                     "фигур\n" +
-                    "а", text.align()
+                    "а", text.alignLeft()
         )
+    }
+
+    @Test
+    fun test_exception_wrong_width_when_initializing() {
+        try {
+            Text(TEXT1, -1)
+        } catch (e: InvalidAttributeValueException) {
+            Assert.assertEquals("Width of the text must be positive", e.message)
+        }
+    }
+
+    @Test
+    fun test_exception_wrong_width_when_aligning() {
+        try {
+            Text(TEXT1).alignLeft(0)
+        } catch (e: InvalidAttributeValueException) {
+            Assert.assertEquals("Width of the text must be positive", e.message)
+        }
     }
 }

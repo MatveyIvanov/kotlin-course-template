@@ -1,41 +1,32 @@
 package textAlignment
 
-enum class Alignment {
-    LEFT,
-    RIGHT,
-    CENTER,
-    JUSTIFY
-}
+import javax.management.InvalidAttributeValueException
 
-class Text(_text: String = "", _width: Int = 120, _alignment: Alignment = Alignment.LEFT) {
+
+class Text(private val sourceText: String = "", private var width: Int = 120) {
     /*
-    *   I decided to keep the original text separate from the aligned one.
-    *   This is because I don’t know how to distinguish between user-supplied
+    *   It's decided to keep the original text separate from the aligned one.
+    *   This is because there is no rule to distinguish between user-supplied
     *   line breaks and line breaks that appear when aligned.
-    *   After all, when re-aligning the text, I cannot remove user's line breaks, but I have to remove "my own".
+    *   After all, when re-aligning the text, user's line breaks cannot be removed, but line breaks that were added during alignment, must be removed before re-alignment.
     *   Therefore, when aligning, the original text is taken.
     */
-    private var sourceText: String = _text
     private var alignedText = ""
-    var width = _width
-    private var alignment: Alignment = _alignment
 
-    operator fun plus(toAdd: String): Text = Text(sourceText + toAdd, width, alignment)
-    operator fun plus(toAdd: Text): Text = Text(sourceText + toAdd.sourceText, width, alignment)
+    init {
+        if (width < 1)
+            throw InvalidAttributeValueException("Width of the text must be positive")
+    }
+
+    operator fun plus(toAdd: String): Text = Text(sourceText + toAdd, width)
+    operator fun plus(toAdd: Text): Text = Text(sourceText + toAdd.sourceText, width)
 
     override fun toString(): String {
         return alignedText.ifEmpty { sourceText }
     }
 
-    fun align(): String = when(alignment) {
-        Alignment.LEFT -> alignLeft()
-        Alignment.RIGHT -> ""
-        Alignment.CENTER -> ""
-        Alignment.JUSTIFY -> ""
-    }
-
     // Left alignment
-    private fun alignLeft(): String {
+    fun alignLeft(width: Int = this.width): String {
         /*
         *   Algorithm loop through the text, takes word by word and process them according to the next rules:
         *     - If word fits in the current line, then add it to the current line
@@ -43,9 +34,12 @@ class Text(_text: String = "", _width: Int = 120, _alignment: Alignment = Alignm
         *     - If word's length is bigger than width, then fill the rest of the current line with
         *           part of the word and split the rest of the word along the following lines
         */
+        if (width < 1)
+            throw InvalidAttributeValueException("Width of the text must be positive")
+
+        this.width = width // In case when passed width is not equal to current width. So current width is updated to passed one
         var curPosition = 0 // Current position of the current line
         var curWord = "" // Current word
-        // var newText: String = "_".repeat(width) + "\n" // Aligned text
         var newText = ""
         for (letter in sourceText) {
             when (letter) {
