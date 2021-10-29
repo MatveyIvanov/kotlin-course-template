@@ -34,25 +34,11 @@ class Calculator {
                                 */
         var pi = false // True if 'p' in expression. If true and 'i' in expression, then add pi constant to the expression
         var pointed = false // True if '.' of current number already in polish notation
-        expr.forEachIndexed loop@ { index, it ->
+        expr.forEachIndexed { index, it ->
             when {
                 it in OPERATIONS.keys -> {
-                    if (charArrayOf('+', '-').contains(it) && (index == 0 || expr[index - 1] == '(' || expr[index - 1] in OPERATIONS.keys)) {
-                        polishNotation += it
-                        return@loop
-                    }
-                    if (expr[index + 1] in OPERATIONS.keys.filter { key -> OPERATIONS[key]!! > 1 }) {
-                        throw IllegalArgumentException("Operation cannot be followed by binary operation")
-                    }
                     pointed = false
-                    polishNotation += ',' // Add comma to detect end of the number in polish notation
-                    /*
-                    *   Pop all operations from stack which priority not lower than current operation
-                    */
-                    while (!stack.empty() && stack.peek() in OPERATIONS.keys && OPERATIONS[stack.peek()]!! >= OPERATIONS[it]!!) {
-                        polishNotation += stack.pop()
-                    }
-                    stack.push(it) // Push current operation to the stack
+                    polishNotation += processMathOperation(expr, it, index, stack)
                 }
                 it.isDigit() -> {
                     polishNotation += it // Just add digit of current number to polish notation
@@ -67,21 +53,7 @@ class Calculator {
                 it == '(' -> {
                     pointed = false
                     bracketCounter++ // Increase bracket counter because opening bracket was added
-                    /*
-                    *  Opening bracket can be placed:
-                    *   - As first symbol in expression
-                    *   - Before digit, constant, opening bracket or unary operation
-                    *   - After opening bracket or operation
-                    */
-                    if (index + 1 < expr.length &&
-                        (expr[index + 1].isDigit() || expr[index + 1] == '(' || charArrayOf('+', '-', 'e', 'p').contains(expr[index + 1])) &&
-                        (index == 0 || expr[index - 1] == '(' || expr[index - 1] in OPERATIONS.keys)
-                    ) {
-                        stack.push(it)
-                    }
-                    else { // Wrong opening bracket placement
-                        throw IllegalArgumentException("Invalid expression syntax")
-                    }
+                    processOpeningBracket(expr, index, stack)
                 }
                 it == ')' -> {
                     pointed = false
@@ -90,72 +62,20 @@ class Calculator {
                     // Bracket counter cannot be negative, otherwise there is closing bracket w/o opening one
                     if (bracketCounter < 0)
                         throw IllegalArgumentException("There must be an opening bracket before closing one")
-                    /*
-                    *  Closing bracket can be placed:
-                    *   - As last symbol in expression
-                    *   - Before operation or closing bracket
-                    *   - After digit, closing bracket or constant
-                    */
-                    if ((expr[index - 1].isDigit() || expr[index - 1] == ')' || charArrayOf('e', 'i').contains(expr[index - 1])) &&
-                        (index == expr.length - 1 || (index + 1 < expr.length && (expr[index + 1] == ')' || expr[index + 1] in OPERATIONS.keys)))
-                    ) {
-                        // Get all operation from stack until opening bracket appears
-                        while (!stack.empty() && stack.peek() != '(') {
-                            polishNotation += stack.pop() // Add operation to polish notation
-                        }
-                        /*
-                        * Theoretically, stack cannot be empty, otherwise there is wrong bracket placement in text,
-                        * which is checked before this block. But it's decided to check stack to prevent crashes
-                        */
-                        if (!stack.empty())
-                            stack.pop() // Delete opening bracket from stack
-                    }
-                    else { // Wrong closing bracket placement
-                        throw IllegalArgumentException("Invalid expression syntax")
-                    }
+                    polishNotation += processClosingBracket(expr, index, stack)
                 }
                 it == 'e' -> { // E constant
-                    /*
-                    * E constant can be placed:
-                    *   - As a first symbol with operation after it
-                    *   - As a last symbol with operation before it
-                    *   - After operation (binary/unary) or opening bracket, but before operation or closing bracket
-                    */
-                    if ((index == 0 && expr[index + 1] in OPERATIONS.keys) ||
-                        (index == expr.length - 1 && expr[index - 1] in OPERATIONS.keys) ||
-                        ((expr[index - 1] in OPERATIONS.keys || expr[index - 1] == '(') &&
-                                (expr[index + 1] in OPERATIONS.keys || expr[index + 1] == ')'))
-                    ) {
-                        pointed = false
-                        polishNotation += it // Add e to polish notation
-                    }
-                    else { // Wrong e constant placement
-                        throw IllegalArgumentException("Invalid expression syntax")
-                    }
+                    pointed = false
+                    polishNotation += processEConstant(expr, index)
                 }
                 it == 'p' -> { // Potential pi constant
                     pointed = false
                     pi = true // Mark that pi constant may appear
                 }
                 it == 'i' && pi -> { // If previous char was 'p' and current is 'i' then add pi constant to polish notation
-                    /*
-                    * Pi constant can be placed:
-                    *   - As a first symbol with operation after it
-                    *   - As a last symbol with operation before it (index - 2 because 'p' is before 'i')
-                    *   - After operation (binary/unary) or opening bracket, but before operation or closing bracket
-                    */
-                    if ((index == 0 && expr[index + 1] in OPERATIONS.keys) ||
-                        (index == expr.length - 1 && expr[index - 2] in OPERATIONS.keys) ||
-                        ((expr[index - 2] in OPERATIONS.keys || expr[index - 2] == '(') &&
-                                (expr[index + 1] in OPERATIONS.keys || expr[index + 1] == ')'))
-                    ) {
-                        pointed = false
-                        pi = false
-                        polishNotation += 'p'
-                    }
-                    else { // Wrong pi constant placement
-                        throw IllegalArgumentException("Invalid expression syntax")
-                    }
+                    pointed = false
+                    pi = false
+                    polishNotation += processPiConstant(expr, index)
                 }
                 else -> { // Unsupported symbol appeared in expression
                     throw CharConversionException("Unsupported symbol '$it'")
@@ -173,7 +93,27 @@ class Calculator {
         return polishNotation
     }
 
-    private fun processOpeningBracket(expr: String, index: Int, stack: Stack<Char>, chr: Char) {
+    private fun processMathOperation(expr: String, chr: Char, index: Int, stack: Stack<Char>): String {
+        if (charArrayOf('+', '-').contains(chr) && (index == 0 || expr[index - 1] == '(' || expr[index - 1] in OPERATIONS.keys)) {
+            return chr.toString() // Unary operation
+        }
+        if (expr[index + 1] in OPERATIONS.keys.filter { key -> OPERATIONS[key]!! > 1 }) {
+            throw IllegalArgumentException("Operation cannot be followed by binary operation")
+        }
+        var toAdd = "," // Add comma to detect end of the number in polish notation
+
+        /*
+        *   Pop all operations from stack which priority not lower than current operation
+        */
+        while (!stack.empty() && stack.peek() in OPERATIONS.keys && OPERATIONS[stack.peek()]!! >= OPERATIONS[chr]!!) {
+            toAdd += stack.pop()
+        }
+        stack.push(chr) // Push current operation to the stack
+
+        return toAdd
+    }
+
+    private fun processOpeningBracket(expr: String, index: Int, stack: Stack<Char>) {
         /*
         *  Opening bracket can be placed:
         *   - As first symbol in expression
@@ -184,17 +124,79 @@ class Calculator {
             (expr[index + 1].isDigit() || expr[index + 1] == '(' || charArrayOf('+', '-', 'e', 'p').contains(expr[index + 1])) &&
             (index == 0 || expr[index - 1] == '(' || expr[index - 1] in OPERATIONS.keys)
         ) {
-            stack.push(chr)
+            stack.push('(')
         }
         else { // Wrong opening bracket placement
             throw IllegalArgumentException("Invalid expression syntax")
         }
     }
 
-    private fun processClosingBracket() {
+    private fun processClosingBracket(expr: String, index: Int, stack: Stack<Char>): String {
+        /*
+        *  Closing bracket can be placed:
+        *   - As last symbol in expression
+        *   - Before operation or closing bracket
+        *   - After digit, closing bracket or constant
+        */
+        var toAdd = ""
+        if ((expr[index - 1].isDigit() || expr[index - 1] == ')' || charArrayOf('e', 'i').contains(expr[index - 1])) &&
+            (index == expr.length - 1 || (index + 1 < expr.length && (expr[index + 1] == ')' || expr[index + 1] in OPERATIONS.keys)))
+        ) {
+            // Get all operation from stack until opening bracket appears
+            while (!stack.empty() && stack.peek() != '(') {
+                toAdd += stack.pop() // Add operation to polish notation
+            }
+            /*
+            * Theoretically, stack cannot be empty, otherwise there is wrong bracket placement in text,
+            * which is checked before this block. But it's decided to check stack to prevent crashes
+            */
+            if (!stack.empty())
+                stack.pop() // Delete opening bracket from stack
 
+            return toAdd
+        }
+        else { // Wrong closing bracket placement
+            throw IllegalArgumentException("Invalid expression syntax")
+        }
     }
 
+    private fun processEConstant(expr: String, index: Int): String {
+        /*
+        * E constant can be placed:
+        *   - As a first symbol with operation after it
+        *   - As a last symbol with operation before it
+        *   - After operation (binary/unary) or opening bracket, but before operation or closing bracket
+        */
+        if ((index == 0 && expr[index + 1] in OPERATIONS.keys) ||
+            (index == expr.length - 1 && expr[index - 1] in OPERATIONS.keys) ||
+            ((expr[index - 1] in OPERATIONS.keys || expr[index - 1] == '(') &&
+                    (expr[index + 1] in OPERATIONS.keys || expr[index + 1] == ')'))
+        ) {
+            return "e"
+        }
+        else { // Wrong e constant placement
+            throw IllegalArgumentException("Invalid expression syntax")
+        }
+    }
+
+    private fun processPiConstant(expr: String, index: Int): String {
+        /*
+        * Pi constant can be placed:
+        *   - As a first symbol with operation after it
+        *   - As a last symbol with operation before it (index - 2 because 'p' is before 'i')
+        *   - After operation (binary/unary) or opening bracket, but before operation or closing bracket
+        */
+        if ((index == 0 && expr[index + 1] in OPERATIONS.keys) ||
+            (index == expr.length - 1 && expr[index - 2] in OPERATIONS.keys) ||
+            ((expr[index - 2] in OPERATIONS.keys || expr[index - 2] == '(') &&
+                    (expr[index + 1] in OPERATIONS.keys || expr[index + 1] == ')'))
+        ) {
+            return "p"
+        }
+        else { // Wrong pi constant placement
+            throw IllegalArgumentException("Invalid expression syntax")
+        }
+    }
 
     private fun calculatePolishNotation(expr: String): Double {
         val stack = Stack<Double>() // Stack for intermediate results
