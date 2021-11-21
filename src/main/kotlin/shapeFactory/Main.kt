@@ -19,7 +19,7 @@ fun main() {
     var maxPerimeter: Shape? = null
     println("Figures:")
     figures.forEach { shape ->
-        println("${shape.toString()}, area=${shape.calcArea()}, perimeter=${shape.calcPerimeter()}")
+        println("${shape}, area=${shape.calcArea()}, perimeter=${shape.calcPerimeter()}")
         sumArea += shape.calcArea()
         sumPerimeter += shape.calcPerimeter()
         if (minArea == null || shape.calcArea() < minArea!!.calcArea())

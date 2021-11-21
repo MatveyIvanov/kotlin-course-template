@@ -10,90 +10,95 @@ import kotlin.random.nextInt
 interface Shape {
     fun calcArea(): Double // Area calculation
     fun calcPerimeter(): Double // Perimeter calculation
+    fun propertyValidation(value: Double)
 }
 
 class Circle(_radius: Double = 1.0): Shape {
     var radius: Double = _radius
         set(value) {
-            if (value < 0) {
-                throw IllegalArgumentException("Radius of the circle must be positive")
-            }
+            propertyValidation(value)
             field = value
         }
     init {
-        if (radius < 0)
-            throw IllegalArgumentException("Radius of the circle must be positive")
+        propertyValidation(radius)
     }
     override fun calcArea(): Double = Math.PI * radius.pow(2)
     override fun calcPerimeter(): Double = 2 * Math.PI * radius
     override fun toString(): String = "Circle with radius=$radius"
+
+    override fun propertyValidation(value: Double) {
+        if (value < 0)
+            throw IllegalArgumentException("Radius of the circle must be positive")
+    }
 }
+
 class Square(_a: Double = 1.0): Shape {
     var a: Double = _a
         set(value) {
-            if (value < 0)
-                throw IllegalArgumentException("Side of the square must be positive")
+            propertyValidation(value)
             field = value
         }
     init {
-        if (a < 0)
-            throw IllegalArgumentException("Side of the square must be positive")
+        propertyValidation(a)
     }
     override fun calcArea(): Double = a.pow(2)
     override fun calcPerimeter(): Double = 4 * a
     override fun toString(): String = "Square with side=$a"
+
+    override fun propertyValidation(value: Double) {
+        if (value < 0)
+            throw IllegalArgumentException("Side of the square must be positive")
+    }
 }
 class Rectangle(_a: Double = 1.0, _b: Double = 1.0): Shape {
     var a: Double = _a
         set(value) {
-            if (value < 0)
-                throw IllegalArgumentException("Sides of the rectangle must be positive")
+            propertyValidation(value)
             field = value
         }
     var b: Double = _b
         set(value) {
-            if (value < 0)
-                throw IllegalArgumentException("Sides of the rectangle must be positive")
+            propertyValidation(value)
             field = value
         }
     init {
-        if (a < 0 || b < 0)
-            throw IllegalArgumentException("Sides of the rectangle must be positive")
+        propertyValidation(a)
+        propertyValidation(b)
     }
     override fun calcArea(): Double = a * b
     override fun calcPerimeter(): Double = 2 * (a + b)
     override fun toString(): String = "Rectangle with sides={$a, $b}"
+
+    override fun propertyValidation(value: Double) {
+        if (value < 0)
+            throw IllegalArgumentException("Sides of the rectangle must be positive")
+    }
 }
+
 class Triangle(_a: Double = 1.0, _b: Double = 1.0, _c: Double = 1.0): Shape {
     var a: Double = _a
         set(value) {
-            if (value < 0)
-                throw IllegalArgumentException("Sides of the triangle must be positive")
+            propertyValidation(value)
             field = value
-            if (!isCorrect())
-                throw IllegalArgumentException("Triangle with sides={$a, $b, $c} cannot exist")
+            triangleValidation()
         }
     var b: Double = _b
         set(value) {
-            if (value < 0)
-                throw IllegalArgumentException("Sides of the triangle must be positive")
+            propertyValidation(value)
             field = value
-            if (!isCorrect())
-                throw IllegalArgumentException("Triangle with sides={$a, $b, $c} cannot exist")
+            triangleValidation()
         }
     var c: Double = _c
         set(value) {
-            if (value < 0)
-                throw IllegalArgumentException("Sides of the triangle must be positive")
+            propertyValidation(value)
             field = value
-            if (!isCorrect())
-                throw IllegalArgumentException("Triangle with sides={$a, $b, $c} cannot exist")
+            triangleValidation()
         }
     init {
-        if (a < 0 || b < 0 || c < 0)
-            throw IllegalArgumentException("Sides of the triangle must be positive")
-        if (!isCorrect())
-            throw IllegalArgumentException("Triangle with sides={$a, $b, $c} cannot exist")
+        propertyValidation(a)
+        propertyValidation(b)
+        propertyValidation(c)
+        triangleValidation()
     }
     override fun calcArea(): Double {
         val halfPerimeter = (a + b + c) / 2
@@ -101,14 +106,19 @@ class Triangle(_a: Double = 1.0, _b: Double = 1.0, _c: Double = 1.0): Shape {
     }
     override fun calcPerimeter(): Double = a + b + c
     override fun toString(): String = "Triangle with sides={$a, $b, $c}"
-    private fun isCorrect(): Boolean {
+
+    override fun propertyValidation(value: Double) {
+        if (value < 0)
+            throw IllegalArgumentException("Sides of the triangle must be positive")
+    }
+
+    private fun triangleValidation() {
         /*
         *   Method that checks if triangle can exist.
         *   Triangle cannot exist if any of its sides is equal or greater than sum of other two sides
         */
         if (a >= b + c || b >= a + c || c >= a + b)
-            return false
-        return true
+            throw IllegalArgumentException("Triangle with sides={$a, $b, $c} cannot exist")
     }
 }
 
