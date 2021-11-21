@@ -10,8 +10,8 @@ class MutableMatrix(matrix: List<DoubleArray>): Matrix(matrix) {
     */
 
     operator fun plusAssign(other: Matrix) {
-        if (size != other.size)
-            throw IllegalArgumentException("Matrices must have equal size")
+        sizeEqualTo(other.size) // If sizes are not equal then exception is called
+
         for (i in 0 until size.first) {
             for (j in 0 until size.second) {
                 matrix[i][j] += other[i, j]
@@ -20,8 +20,8 @@ class MutableMatrix(matrix: List<DoubleArray>): Matrix(matrix) {
     }
 
     operator fun minusAssign(other: Matrix) {
-        if (size != other.size)
-            throw IllegalArgumentException("Matrices must have equal size")
+        sizeEqualTo(other.size) // If sizes are not equal then exception is called
+
         for (i in 0 until size.first) {
             for (j in 0 until size.second) {
                 matrix[i][j] -= other[i, j]
@@ -41,7 +41,6 @@ class MutableMatrix(matrix: List<DoubleArray>): Matrix(matrix) {
             }
         }
 
-        size = Pair(newMatrix.size, newMatrix[0].size)
         matrix = newMatrix
     }
 

@@ -2,30 +2,32 @@ package matrix
 
 import java.lang.ArithmeticException
 
-open class Matrix(protected var matrix: List<DoubleArray>) {
-
+open class Matrix(m: List<DoubleArray>) {
+    protected var matrix = listOf(doubleArrayOf())
     /*
     * This class represents two-dimensional immutable matrix.
     * Once matrix is initialized cannot be changed, but can be used in other matrix calculations
     */
 
-    var size: Pair<Int, Int>
-        protected set // Can be set only from methods of this/child class
+    val size: Pair<Int, Int>
+        get() {
+            return Pair(matrix.size, matrix[0].size)
+        }
 
     init {
-        if (matrix.isEmpty())
+        if (m.isEmpty())
             throw IllegalArgumentException("Matrix cannot be empty")
-        val firstRowSize = matrix[0].size
-        matrix.forEach { row ->
+        val firstRowSize = m[0].size
+        m.forEach { row ->
             if (row.size != firstRowSize)
                 throw IllegalArgumentException("Matrix rows must have equal size")
         }
-        size = Pair(matrix.size, firstRowSize)
+        matrix = m.toList() // toList() is used to create a new object of matrix
     }
 
     operator fun plus(other: Matrix): Matrix {
-        if (size != other.size)
-            throw IllegalArgumentException("Matrices must have equal size")
+        sizeEqualTo(other.size) // If sizes are not equal then exception is called
+
         val newMatrix: List<DoubleArray> = List(size.first) { DoubleArray(size.second) {0.0} }
         for (i in 0 until size.first) {
             for (j in 0 until size.second) {
@@ -36,8 +38,8 @@ open class Matrix(protected var matrix: List<DoubleArray>) {
     }
 
     operator fun minus(other: Matrix): Matrix {
-        if (size != other.size)
-            throw IllegalArgumentException("Matrices must have equal size")
+        sizeEqualTo(other.size) // If sizes are not equal then exception is called
+
         val newMatrix: List<DoubleArray> = List(size.first) { DoubleArray(size.second) {0.0} }
         for (i in 0 until size.first) {
             for (j in 0 until size.second) {
@@ -135,5 +137,11 @@ open class Matrix(protected var matrix: List<DoubleArray>) {
 
     override fun hashCode(): Int {
         return matrix.hashCode()
+    }
+
+    protected fun sizeEqualTo(s: Pair<Int, Int>): Boolean {
+        if (size != s)
+            throw IllegalArgumentException("Matrices must have equal size")
+        return true
     }
 }
