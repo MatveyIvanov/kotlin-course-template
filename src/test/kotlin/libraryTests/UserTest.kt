@@ -11,7 +11,7 @@ class UserTest {
 
     @Test
     fun test_init() {
-        Assert.assertEquals("Matvey Ivanov (user) 25.3.2001", user1.toString())
+        Assert.assertEquals("User(firstName=Matvey, lastName=Ivanov, birthDate=2001-03-25)", user1.toString())
     }
 
     @Test

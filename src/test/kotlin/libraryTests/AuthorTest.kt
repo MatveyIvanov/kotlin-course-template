@@ -11,7 +11,7 @@ class AuthorTest {
 
     @Test
     fun test_init() {
-        Assert.assertEquals("Joanne Rowling (author)", author1.toString())
+        Assert.assertEquals("Author(firstName=Joanne, lastName=Rowling)", author1.toString())
     }
 
     @Test

@@ -20,7 +20,7 @@ class BookTest {
 
     @Test
     fun test_init() {
-        Assert.assertEquals("Harry Potter 1, Joanne Rowling (author), 1997, NOVEL, Available", book1.toString())
+        Assert.assertEquals("Book(name=Harry Potter 1, authors=[Author(firstName=Joanne, lastName=Rowling)], year=1997, genre=NOVEL)", book1.toString())
     }
 
     @Test
