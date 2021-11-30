@@ -31,15 +31,4 @@ class CircleTest {
             Assert.assertEquals("Radius of the circle must be positive", e.message)
         }
     }
-
-    @Test
-    fun test_circle_invalid_radius_set() {
-        val circle = Circle()
-        try {
-            circle.radius = -2.0
-        }
-        catch (e: IllegalArgumentException){
-            Assert.assertEquals("Radius of the circle must be positive", e.message)
-        }
-    }
 }

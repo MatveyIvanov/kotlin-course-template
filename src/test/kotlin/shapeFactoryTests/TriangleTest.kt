@@ -31,33 +31,11 @@ class TriangleTest {
     }
 
     @Test
-    fun test_triangle_invalid_side_set() {
-        val triangle = Triangle()
-        try {
-            triangle.a = -2.0
-        }
-        catch (e: IllegalArgumentException){
-            Assert.assertEquals("Sides of the triangle must be positive", e.message)
-        }
-    }
-
-    @Test
     fun test_triangle_cannot_exist_init() {
         try {
             Triangle(1.0, 2.0, 5.0)
         } catch (e: IllegalArgumentException) {
             Assert.assertEquals("Triangle with sides={1.0, 2.0, 5.0} cannot exist", e.message)
-        }
-    }
-
-    @Test
-    fun test_triangle_cannot_exist_set() {
-        val triangle = Triangle(6.0, 7.0, 8.0)
-        try {
-            triangle.b = 20.0
-        }
-        catch (e: IllegalArgumentException) {
-            Assert.assertEquals("Triangle with sides={6.0, 20.0, 8.0} cannot exist", e.message)
         }
     }
 }

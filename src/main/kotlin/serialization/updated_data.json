@@ -1,0 +1,36 @@
+[
+    {
+        "type": "shapeFactory.Square",
+        "side": 2.0
+    },
+    {
+        "type": "shapeFactory.Rectangle",
+        "side1": 1.5,
+        "side2": 2.0
+    },
+    {
+        "type": "shapeFactory.Circle",
+        "radius": 3.0
+    },
+    {
+        "type": "shapeFactory.Triangle",
+        "side1": 4.0,
+        "side2": 5.0,
+        "side3": 6.0
+    },
+    {
+        "type": "shapeFactory.Rectangle",
+        "side1": 2.2817303324366404E153,
+        "side2": 2.7176533192973957E153
+    },
+    {
+        "type": "shapeFactory.Square",
+        "side": 1.3327587899177585E154
+    },
+    {
+        "type": "shapeFactory.Triangle",
+        "side1": 3.336712026303343E152,
+        "side2": 4.2167290369072514E153,
+        "side3": 4.2594598282287276E153
+    }
+]

@@ -26,15 +26,4 @@ class SquareTest {
             Assert.assertEquals("Side of the square must be positive", e.message)
         }
     }
-
-    @Test
-    fun test_square_invalid_side_set() {
-        val square = Square()
-        try {
-            square.a = -2.0
-        }
-        catch (e: IllegalArgumentException){
-            Assert.assertEquals("Side of the square must be positive", e.message)
-        }
-    }
 }

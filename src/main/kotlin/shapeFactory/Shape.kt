@@ -1,11 +1,11 @@
 package shapeFactory
 
+import kotlinx.serialization.Serializable
 import kotlin.math.abs
 import kotlin.math.pow
 import kotlin.math.sqrt
 import kotlin.random.Random
 import kotlin.random.nextInt
-
 
 interface Shape {
     fun calcArea(): Double // Area calculation
@@ -13,12 +13,9 @@ interface Shape {
     fun propertyValidation(value: Double)
 }
 
-class Circle(_radius: Double = 1.0): Shape {
-    var radius: Double = _radius
-        set(value) {
-            propertyValidation(value)
-            field = value
-        }
+@Serializable
+class Circle(val radius: Double = 1.0): Shape {
+
     init {
         propertyValidation(radius)
     }
@@ -32,42 +29,32 @@ class Circle(_radius: Double = 1.0): Shape {
     }
 }
 
-class Square(_a: Double = 1.0): Shape {
-    var a: Double = _a
-        set(value) {
-            propertyValidation(value)
-            field = value
-        }
+@Serializable
+class Square(val side: Double = 1.0): Shape {
+
     init {
-        propertyValidation(a)
+        propertyValidation(side)
     }
-    override fun calcArea(): Double = a.pow(2)
-    override fun calcPerimeter(): Double = 4 * a
-    override fun toString(): String = "Square with side=$a"
+    override fun calcArea(): Double = side.pow(2)
+    override fun calcPerimeter(): Double = 4 * side
+    override fun toString(): String = "Square with side=$side"
 
     override fun propertyValidation(value: Double) {
         if (value < 0)
             throw IllegalArgumentException("Side of the square must be positive")
     }
 }
-class Rectangle(_a: Double = 1.0, _b: Double = 1.0): Shape {
-    var a: Double = _a
-        set(value) {
-            propertyValidation(value)
-            field = value
-        }
-    var b: Double = _b
-        set(value) {
-            propertyValidation(value)
-            field = value
-        }
+
+@Serializable
+class Rectangle(val side1: Double = 1.0, val side2: Double = 1.0): Shape {
+
     init {
-        propertyValidation(a)
-        propertyValidation(b)
+        propertyValidation(side1)
+        propertyValidation(side2)
     }
-    override fun calcArea(): Double = a * b
-    override fun calcPerimeter(): Double = 2 * (a + b)
-    override fun toString(): String = "Rectangle with sides={$a, $b}"
+    override fun calcArea(): Double = side1 * side2
+    override fun calcPerimeter(): Double = 2 * (side1 + side2)
+    override fun toString(): String = "Rectangle with sides={$side1, $side2}"
 
     override fun propertyValidation(value: Double) {
         if (value < 0)
@@ -75,37 +62,21 @@ class Rectangle(_a: Double = 1.0, _b: Double = 1.0): Shape {
     }
 }
 
-class Triangle(_a: Double = 1.0, _b: Double = 1.0, _c: Double = 1.0): Shape {
-    var a: Double = _a
-        set(value) {
-            propertyValidation(value)
-            field = value
-            triangleValidation()
-        }
-    var b: Double = _b
-        set(value) {
-            propertyValidation(value)
-            field = value
-            triangleValidation()
-        }
-    var c: Double = _c
-        set(value) {
-            propertyValidation(value)
-            field = value
-            triangleValidation()
-        }
+@Serializable
+class Triangle(val side1: Double = 1.0, val side2: Double = 1.0, val side3: Double = 1.0): Shape {
+
     init {
-        propertyValidation(a)
-        propertyValidation(b)
-        propertyValidation(c)
+        propertyValidation(side1)
+        propertyValidation(side2)
+        propertyValidation(side3)
         triangleValidation()
     }
     override fun calcArea(): Double {
-        val halfPerimeter = (a + b + c) / 2
-        return sqrt(halfPerimeter * (halfPerimeter - a) * (halfPerimeter - b) * (halfPerimeter - c))
+        val halfPerimeter = (side1 + side2 + side3) / 2
+        return sqrt(halfPerimeter * (halfPerimeter - side1) * (halfPerimeter - side2) * (halfPerimeter - side3))
     }
-    override fun calcPerimeter(): Double = a + b + c
-    override fun toString(): String = "Triangle with sides={$a, $b, $c}"
+    override fun calcPerimeter(): Double = side1 + side2 + side3
+    override fun toString(): String = "Triangle with sides={$side1, $side2, $side3}"
 
     override fun propertyValidation(value: Double) {
         if (value < 0)
@@ -117,8 +88,8 @@ class Triangle(_a: Double = 1.0, _b: Double = 1.0, _c: Double = 1.0): Shape {
         *   Method that checks if triangle can exist.
         *   Triangle cannot exist if any of its sides is equal or greater than sum of other two sides
         */
-        if (a >= b + c || b >= a + c || c >= a + b)
-            throw IllegalArgumentException("Triangle with sides={$a, $b, $c} cannot exist")
+        if (side1 >= side2 + side3 || side2 >= side1 + side3 || side3 >= side1 + side2)
+            throw IllegalArgumentException("Triangle with sides={$side1, $side2, $side3} cannot exist")
     }
 }
 

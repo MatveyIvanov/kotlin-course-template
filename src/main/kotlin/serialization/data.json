@@ -1,0 +1,21 @@
+[
+  {
+    "type": "shapeFactory.Square",
+    "side": 2.0
+  },
+  {
+    "type": "shapeFactory.Rectangle",
+    "side1": 1.5,
+    "side2": 2.0
+  },
+  {
+    "type": "shapeFactory.Circle",
+    "radius": 3.0
+  },
+  {
+    "type": "shapeFactory.Triangle",
+    "side1": 4.0,
+    "side2": 5.0,
+    "side3": 6.0
+  }
+]

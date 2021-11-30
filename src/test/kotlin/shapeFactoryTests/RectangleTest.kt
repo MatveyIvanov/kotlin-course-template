@@ -26,15 +26,4 @@ class RectangleTest {
             Assert.assertEquals("Sides of the rectangle must be positive", e.message)
         }
     }
-
-    @Test
-    fun test_square_invalid_side_set() {
-        val rectangle = Rectangle()
-        try {
-            rectangle.a = -2.0
-        }
-        catch (e: IllegalArgumentException){
-            Assert.assertEquals("Sides of the rectangle must be positive", e.message)
-        }
-    }
 }
