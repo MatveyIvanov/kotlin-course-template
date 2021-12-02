@@ -8,7 +8,7 @@ import shapeFactory.Circle
 const val PRECISION = 0.0001
 
 class CircleTest {
-    
+
     @Test
     fun test_circle_area_calculation() {
         val circle = Circle(2.0)

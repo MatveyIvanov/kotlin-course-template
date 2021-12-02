@@ -22,9 +22,11 @@ class MutableMatrixTest {
         val matrix = MutableMatrix(matrixList)
         val extraMatrix = MutableMatrix(extraMatrixList)
         matrix += extraMatrix
-        Assert.assertEquals("\n10.0 10.0 10.0\n" +
-                "10.0 10.0 10.0\n" +
-                "10.0 10.0 10.0", matrix.toString())
+        Assert.assertEquals(
+            "\n10.0 10.0 10.0\n" +
+                    "10.0 10.0 10.0\n" +
+                    "10.0 10.0 10.0", matrix.toString()
+        )
     }
 
     @Test
@@ -42,9 +44,11 @@ class MutableMatrixTest {
         val matrix = MutableMatrix(matrixList)
         val extraMatrix = MutableMatrix(extraMatrixList)
         matrix -= extraMatrix
-        Assert.assertEquals("\n-8.0 -6.0 -4.0\n" +
-                "-2.0 0.0 2.0\n" +
-                "4.0 6.0 8.0", matrix.toString())
+        Assert.assertEquals(
+            "\n-8.0 -6.0 -4.0\n" +
+                    "-2.0 0.0 2.0\n" +
+                    "4.0 6.0 8.0", matrix.toString()
+        )
     }
 
     @Test
@@ -62,22 +66,28 @@ class MutableMatrixTest {
         val matrix = MutableMatrix(matrixList)
         val extraMatrix = MutableMatrix(extraMatrixList)
         matrix *= extraMatrix
-        Assert.assertEquals("\n30.0 24.0 18.0\n" +
-                "84.0 69.0 54.0\n" +
-                "138.0 114.0 90.0", matrix.toString())
+        Assert.assertEquals(
+            "\n30.0 24.0 18.0\n" +
+                    "84.0 69.0 54.0\n" +
+                    "138.0 114.0 90.0", matrix.toString()
+        )
     }
 
     @Test
     fun test_times_assign_size() {
-        val matrix1 = MutableMatrix(listOf(
-            doubleArrayOf(3.0, 5.0, 9.0),
-            doubleArrayOf(-1.0, 4.0, 11.0)
-        ))
-        val matrix2 = MutableMatrix(listOf(
-            doubleArrayOf(1.0, -1.0),
-            doubleArrayOf(4.0, -2.0),
-            doubleArrayOf(-4.0, -7.0)
-        ))
+        val matrix1 = MutableMatrix(
+            listOf(
+                doubleArrayOf(3.0, 5.0, 9.0),
+                doubleArrayOf(-1.0, 4.0, 11.0)
+            )
+        )
+        val matrix2 = MutableMatrix(
+            listOf(
+                doubleArrayOf(1.0, -1.0),
+                doubleArrayOf(4.0, -2.0),
+                doubleArrayOf(-4.0, -7.0)
+            )
+        )
         matrix1 *= matrix2
         Assert.assertEquals(Pair(2, 2), matrix1.size)
     }
@@ -88,7 +98,10 @@ class MutableMatrixTest {
             val matrix = MutableMatrix(matrixList)
             matrix *= MutableMatrix(listOf(doubleArrayOf(1.0, 2.0), doubleArrayOf(3.0, 4.0)))
         } catch (e: IllegalArgumentException) {
-            Assert.assertEquals("Number of rows in first matrix must be equal to number of columns in second matrix", e.message)
+            Assert.assertEquals(
+                "Number of rows in first matrix must be equal to number of columns in second matrix",
+                e.message
+            )
         }
     }
 
@@ -96,18 +109,22 @@ class MutableMatrixTest {
     fun test_times_assign_scalar() {
         val matrix = MutableMatrix(matrixList)
         matrix *= 2.0
-        Assert.assertEquals("\n2.0 4.0 6.0\n" +
-                "8.0 10.0 12.0\n" +
-                "14.0 16.0 18.0", matrix.toString())
+        Assert.assertEquals(
+            "\n2.0 4.0 6.0\n" +
+                    "8.0 10.0 12.0\n" +
+                    "14.0 16.0 18.0", matrix.toString()
+        )
     }
 
     @Test
     fun test_div_assign_scalar() {
         val matrix = MutableMatrix(matrixList)
         matrix /= 2.0
-        Assert.assertEquals("\n0.5 1.0 1.5\n" +
-                "2.0 2.5 3.0\n" +
-                "3.5 4.0 4.5", matrix.toString())
+        Assert.assertEquals(
+            "\n0.5 1.0 1.5\n" +
+                    "2.0 2.5 3.0\n" +
+                    "3.5 4.0 4.5", matrix.toString()
+        )
     }
 
     @Test

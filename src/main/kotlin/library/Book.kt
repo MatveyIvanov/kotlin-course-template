@@ -9,7 +9,9 @@ enum class Genre {
     NOVEL
 }
 
-data class Book(val name: String,
-           val authors: List<Author> = arrayListOf(),
-           val year: Year? = null,
-           val genre: Genre? = null)
+data class Book(
+    val name: String,
+    val authors: List<Author> = arrayListOf(),
+    val year: Year? = null,
+    val genre: Genre? = null
+)

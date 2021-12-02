@@ -3,14 +3,14 @@ package shapeCollector
 import shapeFactory.*
 
 fun main() {
-   /*
-    *   Examples with ShapeCollector<Shape>
-    */
+    /*
+     *   Examples with ShapeCollector<Shape>
+     */
     val shapeCollector = ShapeCollector<Shape>()
 
     shapeCollector.add(Square(2.0))
     shapeCollector.add(Rectangle(1.0, 4.0))
-    shapeCollector.addAll(listOf(Circle(5.0), Triangle(2.0,2.0,2.0)))
+    shapeCollector.addAll(listOf(Circle(5.0), Triangle(2.0, 2.0, 2.0)))
 
     println("Shape collector:\n" + shapeCollector.getAll())
 
@@ -28,9 +28,9 @@ fun main() {
 
     println("\nShapes with class Rectangle:\n${shapeCollector.getAllByClass(Rectangle::class.java)}")
 
-   /*
-    *   Examples with ShapeCollector<Circle>
-    */
+    /*
+     *   Examples with ShapeCollector<Circle>
+     */
     val circleCollector = ShapeCollector<Circle>()
 
     circleCollector.add(Circle(3.0))

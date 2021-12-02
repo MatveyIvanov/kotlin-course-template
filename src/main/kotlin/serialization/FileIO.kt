@@ -8,7 +8,7 @@ import java.nio.file.Paths
 val DEFAULT_PATH = Paths.get("").toAbsolutePath().toString()
 
 object FileIO {
-    fun writeToFile(data: String, path: String = "$DEFAULT_PATH\\data.txt") : Boolean {
+    fun writeToFile(data: String, path: String = "$DEFAULT_PATH\\data.txt"): Boolean {
         return try {
             FileWriter(path).buffered().use { writer ->
                 writer.write(data)
@@ -19,7 +19,7 @@ object FileIO {
         }
     }
 
-    fun readFromFile(path: String) : String? {
+    fun readFromFile(path: String): String? {
         return try {
             val text: String?
             FileReader(path).buffered().use { reader ->

@@ -20,7 +20,7 @@ object ShapeSerializer {
         }
     }
 
-    inline fun <reified T> encode(value: T) : String = json.encodeToString(value)
+    inline fun <reified T> encode(value: T): String = json.encodeToString(value)
 
-    inline fun <reified T> decode(string: String) : T = json.decodeFromString(string)
+    inline fun <reified T> decode(string: String): T = json.decodeFromString(string)
 }

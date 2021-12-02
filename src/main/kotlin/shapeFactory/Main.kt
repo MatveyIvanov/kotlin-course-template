@@ -2,14 +2,15 @@ import shapeFactory.*
 
 fun main() {
     val factory = ShapeFactoryImpl()
-    val figures = listOf(factory.createCircle(2.0),
-                         factory.createRandomCircle(),
-                         factory.createSquare(3.0),
-                         factory.createRandomSquare(),
-                         factory.createRectangle(1.0, 4.0),
-                         factory.createRandomRectangle(),
-                         factory.createTriangle(0.8, 1.2, 1.0),
-                         factory.createRandomTriangle()
+    val figures = listOf(
+        factory.createCircle(2.0),
+        factory.createRandomCircle(),
+        factory.createSquare(3.0),
+        factory.createRandomSquare(),
+        factory.createRectangle(1.0, 4.0),
+        factory.createRandomRectangle(),
+        factory.createTriangle(0.8, 1.2, 1.0),
+        factory.createRandomTriangle()
     )
     var sumArea = 0.0
     var sumPerimeter = 0.0

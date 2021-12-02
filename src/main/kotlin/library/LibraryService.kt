@@ -1,6 +1,5 @@
 package library
 
-import java.lang.Exception
 import java.time.Year
 
 
@@ -10,10 +9,11 @@ sealed class Status {
     data class UsedBy(val user: User) : Status() {
         override fun toString(): String = super.toString()
     }
+
     object ComingSoon : Status()
     object Restoration : Status()
 
-    override fun toString(): String = when(this) {
+    override fun toString(): String = when (this) {
         is Available -> "Available"
         is UsedBy -> "Used by ${this.user}"
         is ComingSoon -> "Coming soon"
@@ -45,7 +45,12 @@ interface LibraryServiceInterface {
     /**
      * @return list of books with the given filters
      */
-    fun findBooks(substring: String? = null, author: Author? = null, year: Year? = null, genre: Genre? = null): List<Book>
+    fun findBooks(
+        substring: String? = null,
+        author: Author? = null,
+        year: Year? = null,
+        genre: Genre? = null
+    ): List<Book>
 
     /**
      * @return list of all books in the library
@@ -109,11 +114,11 @@ interface LibraryServiceInterface {
 }
 
 class LibraryService(
-        private val books: MutableSet<Book> = mutableSetOf(),
-        private val users: MutableSet<User> = mutableSetOf(),
-        private val statuses: MutableMap<Book, Status> = mutableMapOf(),
-        private val userBooks: MutableMap<User, MutableSet<Book>> = mutableMapOf(),
-): LibraryServiceInterface {
+    private val books: MutableSet<Book> = mutableSetOf(),
+    private val users: MutableSet<User> = mutableSetOf(),
+    private val statuses: MutableMap<Book, Status> = mutableMapOf(),
+    private val userBooks: MutableMap<User, MutableSet<Book>> = mutableMapOf(),
+) : LibraryServiceInterface {
     override fun findBooks(substring: String): List<Book> = books.filter { book -> book.name.contains(substring) }
     override fun findBooks(author: Author): List<Book> = books.filter { book -> book.authors.contains(author) }
     override fun findBooks(year: Year): List<Book> = books.filter { book -> book.year == year }
@@ -135,7 +140,8 @@ class LibraryService(
 
     override fun getBookStatus(book: Book): Status {
         val libraryBook = books.find { item -> item.name == book.name }
-        libraryBook ?: throw NoSuchElementException("This book is not in the library") // If passed book is not found in book list
+        libraryBook
+            ?: throw NoSuchElementException("This book is not in the library") // If passed book is not found in book list
 
         return statuses[libraryBook]!!
     }
@@ -144,7 +150,8 @@ class LibraryService(
 
     override fun setBookStatus(book: Book, status: Status) {
         val libraryBook = books.find { item -> item.name == book.name }
-        libraryBook ?: throw NoSuchElementException("This book is not in the library") // If passed book is not found in book list
+        libraryBook
+            ?: throw NoSuchElementException("This book is not in the library") // If passed book is not found in book list
 
         statuses[libraryBook] = status
     }
@@ -169,10 +176,15 @@ class LibraryService(
 
     override fun unregisterUser(user: User) {
         val libraryUser = users.find { item -> item == user }
-        libraryUser ?: throw NoSuchElementException("This user is not registered") // If passed user is not found in user list
+        libraryUser
+            ?: throw NoSuchElementException("This user is not registered") // If passed user is not found in user list
 
         if (userBooks[libraryUser]!!.size > 0) // Check if user has books to return
-            throw RuntimeException("User has books to return:\n${userBooks[libraryUser]!!.toString().replace("[", "").replace("]", "")}")
+            throw RuntimeException(
+                "User has books to return:\n${
+                    userBooks[libraryUser]!!.toString().replace("[", "").replace("]", "")
+                }"
+            )
 
         users.remove(user)
     }
@@ -180,13 +192,15 @@ class LibraryService(
     override fun takeBook(user: User, book: Book) {
         // Book check
         val libraryBook = books.find { item -> item == book }
-        libraryBook ?: throw NoSuchElementException("This book is not in the library") // If passed book is not found in book list
+        libraryBook
+            ?: throw NoSuchElementException("This book is not in the library") // If passed book is not found in book list
         if (statuses[libraryBook] != Status.Available) // Not available book cannot be taken
             throw RuntimeException("Book is unavailable. Come back later")
 
         // User check
         val libraryUser = users.find { item -> item == user }
-        libraryUser ?: throw NoSuchElementException("This user is not registered") // If passed user is not found in user list
+        libraryUser
+            ?: throw NoSuchElementException("This user is not registered") // If passed user is not found in user list
         if (userBooks[libraryUser]!!.contains(libraryBook))
             throw RuntimeException("User already has that book")
         if (userBooks[libraryUser]!!.size == 3) // User cannot have more than 3 books
@@ -195,9 +209,11 @@ class LibraryService(
         statuses[libraryBook] = Status.UsedBy(libraryUser)
         userBooks[libraryUser]!!.add(libraryBook)
     }
+
     override fun returnBook(book: Book) {
         val libraryBook = books.find { item -> item == book }
-        libraryBook ?: throw NoSuchElementException("This book is not in the library") // If passed book is not found in book list
+        libraryBook
+            ?: throw NoSuchElementException("This book is not in the library") // If passed book is not found in book list
 
         var usedBy: User? = null
         run loop@{
@@ -227,7 +243,8 @@ class LibraryService(
 
     override fun bookRestoration(book: Book) {
         val libraryBook = books.find { item -> item == book }
-        libraryBook ?: throw NoSuchElementException("This book is not in the library") // If passed book is not in library
+        libraryBook
+            ?: throw NoSuchElementException("This book is not in the library") // If passed book is not in library
 
         if (statuses[libraryBook] == Status.Restoration)
             throw RuntimeException("Book is already on restoration")
@@ -235,5 +252,6 @@ class LibraryService(
         statuses[libraryBook] = Status.Restoration
     }
 
-    override fun availableSoonBooks(): List<Book> = books.filter { book -> statuses[book] == Status.ComingSoon || statuses[book] == Status.Restoration }
+    override fun availableSoonBooks(): List<Book> =
+        books.filter { book -> statuses[book] == Status.ComingSoon || statuses[book] == Status.Restoration }
 }

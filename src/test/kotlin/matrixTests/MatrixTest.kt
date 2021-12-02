@@ -9,22 +9,28 @@ import java.lang.IndexOutOfBoundsException
 const val PRECISION = 0.00001
 
 class MatrixTest {
-    private val matrix = Matrix(listOf(
-        doubleArrayOf(1.0, 2.0, 3.0),
-        doubleArrayOf(4.0, 5.0, 6.0),
-        doubleArrayOf(7.0, 8.0, 9.0)
-    ))
-    private val extraMatrix = Matrix(listOf(
-        doubleArrayOf(9.0, 8.0, 7.0),
-        doubleArrayOf(6.0, 5.0, 4.0),
-        doubleArrayOf(3.0, 2.0, 1.0)
-    ))
+    private val matrix = Matrix(
+        listOf(
+            doubleArrayOf(1.0, 2.0, 3.0),
+            doubleArrayOf(4.0, 5.0, 6.0),
+            doubleArrayOf(7.0, 8.0, 9.0)
+        )
+    )
+    private val extraMatrix = Matrix(
+        listOf(
+            doubleArrayOf(9.0, 8.0, 7.0),
+            doubleArrayOf(6.0, 5.0, 4.0),
+            doubleArrayOf(3.0, 2.0, 1.0)
+        )
+    )
 
     @Test
     fun test_init_by_string_representation() {
-        Assert.assertEquals("\n1.0 2.0 3.0\n" +
-                "4.0 5.0 6.0\n" +
-                "7.0 8.0 9.0", matrix.toString())
+        Assert.assertEquals(
+            "\n1.0 2.0 3.0\n" +
+                    "4.0 5.0 6.0\n" +
+                    "7.0 8.0 9.0", matrix.toString()
+        )
     }
 
     @Test
@@ -52,9 +58,11 @@ class MatrixTest {
 
     @Test
     fun test_plus() {
-        Assert.assertEquals("\n10.0 10.0 10.0\n" +
-                "10.0 10.0 10.0\n" +
-                "10.0 10.0 10.0", (matrix + extraMatrix).toString())
+        Assert.assertEquals(
+            "\n10.0 10.0 10.0\n" +
+                    "10.0 10.0 10.0\n" +
+                    "10.0 10.0 10.0", (matrix + extraMatrix).toString()
+        )
     }
 
     @Test
@@ -73,9 +81,11 @@ class MatrixTest {
 
     @Test
     fun test_minus() {
-        Assert.assertEquals("\n-8.0 -6.0 -4.0\n" +
-                "-2.0 0.0 2.0\n" +
-                "4.0 6.0 8.0", (matrix - extraMatrix).toString())
+        Assert.assertEquals(
+            "\n-8.0 -6.0 -4.0\n" +
+                    "-2.0 0.0 2.0\n" +
+                    "4.0 6.0 8.0", (matrix - extraMatrix).toString()
+        )
     }
 
     @Test
@@ -94,9 +104,11 @@ class MatrixTest {
 
     @Test
     fun test_times() {
-        Assert.assertEquals("\n30.0 24.0 18.0\n" +
-                "84.0 69.0 54.0\n" +
-                "138.0 114.0 90.0", (matrix * extraMatrix).toString())
+        Assert.assertEquals(
+            "\n30.0 24.0 18.0\n" +
+                    "84.0 69.0 54.0\n" +
+                    "138.0 114.0 90.0", (matrix * extraMatrix).toString()
+        )
     }
 
     @Test
@@ -109,15 +121,20 @@ class MatrixTest {
         try {
             Matrix(listOf(doubleArrayOf(1.0, 2.0), doubleArrayOf(3.0, 4.0))) * matrix
         } catch (e: IllegalArgumentException) {
-            Assert.assertEquals("Number of columns in first matrix must be equal to number of rows in second matrix", e.message)
+            Assert.assertEquals(
+                "Number of columns in first matrix must be equal to number of rows in second matrix",
+                e.message
+            )
         }
     }
 
     @Test
     fun test_times_scalar() {
-        Assert.assertEquals("\n2.0 4.0 6.0\n" +
-                "8.0 10.0 12.0\n" +
-                "14.0 16.0 18.0", (matrix * 2.0).toString())
+        Assert.assertEquals(
+            "\n2.0 4.0 6.0\n" +
+                    "8.0 10.0 12.0\n" +
+                    "14.0 16.0 18.0", (matrix * 2.0).toString()
+        )
     }
 
     @Test
@@ -128,9 +145,11 @@ class MatrixTest {
 
     @Test
     fun test_div_scalar() {
-        Assert.assertEquals("\n0.5 1.0 1.5\n" +
-                "2.0 2.5 3.0\n" +
-                "3.5 4.0 4.5", (matrix / 2.0).toString())
+        Assert.assertEquals(
+            "\n0.5 1.0 1.5\n" +
+                    "2.0 2.5 3.0\n" +
+                    "3.5 4.0 4.5", (matrix / 2.0).toString()
+        )
     }
 
     @Test
@@ -183,9 +202,11 @@ class MatrixTest {
 
     @Test
     fun test_unary_minus() {
-        Assert.assertEquals("\n-1.0 -2.0 -3.0\n" +
-                "-4.0 -5.0 -6.0\n" +
-                "-7.0 -8.0 -9.0", (-matrix).toString())
+        Assert.assertEquals(
+            "\n-1.0 -2.0 -3.0\n" +
+                    "-4.0 -5.0 -6.0\n" +
+                    "-7.0 -8.0 -9.0", (-matrix).toString()
+        )
     }
 
     @Test
@@ -195,24 +216,32 @@ class MatrixTest {
 
     @Test
     fun test_unary_plus() {
-        Assert.assertEquals("\n1.0 2.0 3.0\n" +
-                "4.0 5.0 6.0\n" +
-                "7.0 8.0 9.0", (+matrix).toString())
+        Assert.assertEquals(
+            "\n1.0 2.0 3.0\n" +
+                    "4.0 5.0 6.0\n" +
+                    "7.0 8.0 9.0", (+matrix).toString()
+        )
     }
 
     @Test
     fun test_equals() {
-        Assert.assertTrue(matrix == Matrix(listOf(
-            doubleArrayOf(1.0, 2.0, 3.0),
-            doubleArrayOf(4.0, 5.0, 6.0),
-            doubleArrayOf(7.0, 8.0, 9.0)
-        )))
+        Assert.assertTrue(
+            matrix == Matrix(
+                listOf(
+                    doubleArrayOf(1.0, 2.0, 3.0),
+                    doubleArrayOf(4.0, 5.0, 6.0),
+                    doubleArrayOf(7.0, 8.0, 9.0)
+                )
+            )
+        )
     }
 
     @Test
     fun test_to_string() {
-        Assert.assertEquals("\n1.0 2.0 3.0\n" +
-                "4.0 5.0 6.0\n" +
-                "7.0 8.0 9.0", matrix.toString())
+        Assert.assertEquals(
+            "\n1.0 2.0 3.0\n" +
+                    "4.0 5.0 6.0\n" +
+                    "7.0 8.0 9.0", matrix.toString()
+        )
     }
 }

@@ -57,12 +57,18 @@ class LibraryServiceTest {
 
     @Test
     fun test_find_books_by_genre() {
-        Assert.assertEquals(arrayListOf(bookList[0], bookList[1], bookList[2], bookList[3]), libraryService.findBooks(Genre.NOVEL))
+        Assert.assertEquals(
+            arrayListOf(bookList[0], bookList[1], bookList[2], bookList[3]),
+            libraryService.findBooks(Genre.NOVEL)
+        )
     }
 
     @Test
     fun test_find_books_by_multiple_filters() {
-        Assert.assertEquals(arrayListOf(bookList[3]), libraryService.findBooks("The", year = Year.parse("1977"), genre = Genre.NOVEL))
+        Assert.assertEquals(
+            arrayListOf(bookList[3]),
+            libraryService.findBooks("The", year = Year.parse("1977"), genre = Genre.NOVEL)
+        )
     }
 
     @Test
@@ -91,7 +97,10 @@ class LibraryServiceTest {
 
     @Test
     fun test_get_all_book_statuses() {
-        Assert.assertEquals(bookList.associateWith { libraryService.getBookStatus(it) }, libraryService.getAllBookStatuses())
+        Assert.assertEquals(
+            bookList.associateWith { libraryService.getBookStatus(it) },
+            libraryService.getAllBookStatuses()
+        )
     }
 
     @Test
@@ -150,7 +159,10 @@ class LibraryServiceTest {
         try {
             libraryService.unregisterUser(userList[0])
         } catch (e: RuntimeException) {
-            Assert.assertEquals("User has books to return:\nBook(name=Harry Potter and the Prisoner of Azkaban, authors=Author(firstName=Joanne, lastName=Rowling), year=1999, genre=NOVEL)", e.message)
+            Assert.assertEquals(
+                "User has books to return:\nBook(name=Harry Potter and the Prisoner of Azkaban, authors=Author(firstName=Joanne, lastName=Rowling), year=1999, genre=NOVEL)",
+                e.message
+            )
         }
     }
 

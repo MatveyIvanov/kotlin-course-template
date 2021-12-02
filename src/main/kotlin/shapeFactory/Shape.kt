@@ -14,11 +14,12 @@ interface Shape {
 }
 
 @Serializable
-class Circle(val radius: Double = 1.0): Shape {
+class Circle(val radius: Double = 1.0) : Shape {
 
     init {
         propertyValidation(radius)
     }
+
     override fun calcArea(): Double = Math.PI * radius.pow(2)
     override fun calcPerimeter(): Double = 2 * Math.PI * radius
     override fun toString(): String = "Circle with radius=$radius"
@@ -30,11 +31,12 @@ class Circle(val radius: Double = 1.0): Shape {
 }
 
 @Serializable
-class Square(val side: Double = 1.0): Shape {
+class Square(val side: Double = 1.0) : Shape {
 
     init {
         propertyValidation(side)
     }
+
     override fun calcArea(): Double = side.pow(2)
     override fun calcPerimeter(): Double = 4 * side
     override fun toString(): String = "Square with side=$side"
@@ -46,12 +48,13 @@ class Square(val side: Double = 1.0): Shape {
 }
 
 @Serializable
-class Rectangle(val side1: Double = 1.0, val side2: Double = 1.0): Shape {
+class Rectangle(val side1: Double = 1.0, val side2: Double = 1.0) : Shape {
 
     init {
         propertyValidation(side1)
         propertyValidation(side2)
     }
+
     override fun calcArea(): Double = side1 * side2
     override fun calcPerimeter(): Double = 2 * (side1 + side2)
     override fun toString(): String = "Rectangle with sides={$side1, $side2}"
@@ -63,7 +66,7 @@ class Rectangle(val side1: Double = 1.0, val side2: Double = 1.0): Shape {
 }
 
 @Serializable
-class Triangle(val side1: Double = 1.0, val side2: Double = 1.0, val side3: Double = 1.0): Shape {
+class Triangle(val side1: Double = 1.0, val side2: Double = 1.0, val side3: Double = 1.0) : Shape {
 
     init {
         propertyValidation(side1)
@@ -71,10 +74,12 @@ class Triangle(val side1: Double = 1.0, val side2: Double = 1.0, val side3: Doub
         propertyValidation(side3)
         triangleValidation()
     }
+
     override fun calcArea(): Double {
         val halfPerimeter = (side1 + side2 + side3) / 2
         return sqrt(halfPerimeter * (halfPerimeter - side1) * (halfPerimeter - side2) * (halfPerimeter - side3))
     }
+
     override fun calcPerimeter(): Double = side1 + side2 + side3
     override fun toString(): String = "Triangle with sides={$side1, $side2, $side3}"
 
@@ -120,8 +125,11 @@ class ShapeFactoryImpl : ShapeFactory {
     */
     override fun createRandomCircle(): Circle = Circle(Random.nextDouble(0.0, sqrt(Double.MAX_VALUE) / Math.PI))
     override fun createRandomSquare(): Square = Square(Random.nextDouble(0.0, sqrt(Double.MAX_VALUE)))
-    override fun createRandomRectangle(): Rectangle = Rectangle(Random.nextDouble(0.0, sqrt(Double.MAX_VALUE)),
-                                                                Random.nextDouble(0.0, sqrt(Double.MAX_VALUE)))
+    override fun createRandomRectangle(): Rectangle = Rectangle(
+        Random.nextDouble(0.0, sqrt(Double.MAX_VALUE)),
+        Random.nextDouble(0.0, sqrt(Double.MAX_VALUE))
+    )
+
     override fun createRandomTriangle(): Triangle {
         val a = Random.nextDouble(0.0, sqrt(Double.MAX_VALUE))
         val b = Random.nextDouble(0.0, sqrt(Double.MAX_VALUE))

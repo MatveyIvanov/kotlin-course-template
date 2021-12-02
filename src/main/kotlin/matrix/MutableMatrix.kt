@@ -2,7 +2,7 @@ package matrix
 
 import java.lang.ArithmeticException
 
-class MutableMatrix(matrix: List<DoubleArray>): Matrix(matrix) {
+class MutableMatrix(matrix: List<DoubleArray>) : Matrix(matrix) {
 
     /*
     *  This class represents two-dimensional mutable matrix.
@@ -32,7 +32,7 @@ class MutableMatrix(matrix: List<DoubleArray>): Matrix(matrix) {
     operator fun timesAssign(other: Matrix) {
         if (size.first != other.size.second)
             throw IllegalArgumentException("Number of rows in first matrix must be equal to number of columns in second matrix")
-        val newMatrix: List<DoubleArray> = List(size.first) { DoubleArray(other.size.second) {0.0} }
+        val newMatrix: List<DoubleArray> = List(size.first) { DoubleArray(other.size.second) { 0.0 } }
         for (i in 0 until size.first) {
             for (j in 0 until other.size.second) {
                 for (k in 0 until size.second) {
@@ -52,7 +52,7 @@ class MutableMatrix(matrix: List<DoubleArray>): Matrix(matrix) {
         }
     }
 
-    operator  fun divAssign(scalar: Double) {
+    operator fun divAssign(scalar: Double) {
         if (scalar == 0.0)
             throw ArithmeticException("Division by zero is not allowed")
         for (i in 0 until size.first) {

@@ -10,7 +10,13 @@ fun main() {
 
     println("Deserialized list of shapes from data.json:\n\n$decodedList")
 
-    decodedList.addAll(listOf(shapeFactory.createRandomShape(), shapeFactory.createRandomShape(), shapeFactory.createRandomShape()))
+    decodedList.addAll(
+        listOf(
+            shapeFactory.createRandomShape(),
+            shapeFactory.createRandomShape(),
+            shapeFactory.createRandomShape()
+        )
+    )
 
     println("\n\nUpdated list of shapes:\n\n$decodedList")
 

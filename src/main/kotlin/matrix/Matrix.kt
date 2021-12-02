@@ -28,7 +28,7 @@ open class Matrix(m: List<DoubleArray>) {
     operator fun plus(other: Matrix): Matrix {
         sizeEqualTo(other.size) // If sizes are not equal then exception is called
 
-        val newMatrix: List<DoubleArray> = List(size.first) { DoubleArray(size.second) {0.0} }
+        val newMatrix: List<DoubleArray> = List(size.first) { DoubleArray(size.second) { 0.0 } }
         for (i in 0 until size.first) {
             for (j in 0 until size.second) {
                 newMatrix[i][j] = matrix[i][j] + other[i, j]
@@ -40,7 +40,7 @@ open class Matrix(m: List<DoubleArray>) {
     operator fun minus(other: Matrix): Matrix {
         sizeEqualTo(other.size) // If sizes are not equal then exception is called
 
-        val newMatrix: List<DoubleArray> = List(size.first) { DoubleArray(size.second) {0.0} }
+        val newMatrix: List<DoubleArray> = List(size.first) { DoubleArray(size.second) { 0.0 } }
         for (i in 0 until size.first) {
             for (j in 0 until size.second) {
                 newMatrix[i][j] = matrix[i][j] - other[i, j]
@@ -52,7 +52,7 @@ open class Matrix(m: List<DoubleArray>) {
     operator fun times(other: Matrix): Matrix {
         if (size.second != other.size.first)
             throw IllegalArgumentException("Number of columns in first matrix must be equal to number of rows in second matrix")
-        val newMatrix: List<DoubleArray> = List(size.first) { DoubleArray(other.size.second) {0.0} }
+        val newMatrix: List<DoubleArray> = List(size.first) { DoubleArray(other.size.second) { 0.0 } }
         for (i in 0 until size.first) {
             for (j in 0 until other.size.second) {
                 for (k in 0 until size.second) {
@@ -64,7 +64,7 @@ open class Matrix(m: List<DoubleArray>) {
     }
 
     operator fun times(scalar: Double): Matrix {
-        val newMatrix: List<DoubleArray> = List(size.first) { DoubleArray(size.second) {0.0} }
+        val newMatrix: List<DoubleArray> = List(size.first) { DoubleArray(size.second) { 0.0 } }
         for (i in 0 until size.first) {
             for (j in 0 until size.second) {
                 newMatrix[i][j] = matrix[i][j] * scalar
@@ -76,7 +76,7 @@ open class Matrix(m: List<DoubleArray>) {
     operator fun div(scalar: Double): Matrix {
         if (scalar == 0.0)
             throw ArithmeticException("Division by zero is not allowed")
-        val newMatrix: List<DoubleArray> = List(size.first) { DoubleArray(size.second) {0.0} }
+        val newMatrix: List<DoubleArray> = List(size.first) { DoubleArray(size.second) { 0.0 } }
         for (i in 0 until size.first) {
             for (j in 0 until size.second) {
                 newMatrix[i][j] = matrix[i][j] / scalar
@@ -94,8 +94,8 @@ open class Matrix(m: List<DoubleArray>) {
     }
 
     operator fun unaryMinus(): Matrix {
-        val newMatrix: List<DoubleArray> = List(size.first) { DoubleArray(size.second) {0.0} }
-        for(i in 0 until size.first) {
+        val newMatrix: List<DoubleArray> = List(size.first) { DoubleArray(size.second) { 0.0 } }
+        for (i in 0 until size.first) {
             for (j in 0 until size.second) {
                 newMatrix[i][j] = -matrix[i][j]
             }
